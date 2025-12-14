@@ -97,9 +97,6 @@ pub use dimension::{Dimension, Dimensionless, DivDim};
 pub use quantity::Quantity;
 pub use unit::{Per, Simplify, Unit, Unitless};
 
-#[cfg(feature = "serde")]
-pub use quantity::serde_with_unit;
-
 // ─────────────────────────────────────────────────────────────────────────────
 // Predefined unit modules (grouped by dimension)
 // ─────────────────────────────────────────────────────────────────────────────

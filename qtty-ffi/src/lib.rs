@@ -96,6 +96,7 @@
 // Core modules
 mod ffi;
 pub mod helpers;
+mod json;
 #[macro_use]
 pub mod macros;
 pub mod registry;
@@ -121,6 +122,13 @@ pub use helpers::{
     minutes_into_ffi, radians_into_ffi, seconds_into_ffi, try_into_days, try_into_degrees,
     try_into_hours, try_into_kilometers, try_into_meters, try_into_minutes, try_into_radians,
     try_into_seconds,
+};
+
+// Re-export JSON FFI symbols from the dedicated module so they are visible
+// at the crate root for header generation and consumers.
+pub use json::{
+    qtty_quantity_from_json, qtty_quantity_from_json_value, qtty_quantity_to_json,
+    qtty_quantity_to_json_value, qtty_string_free,
 };
 
 #[cfg(test)]

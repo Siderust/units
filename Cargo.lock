@@ -370,6 +370,8 @@ dependencies = [
  "approx",
  "cbindgen",
  "qtty",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

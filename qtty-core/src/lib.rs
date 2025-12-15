@@ -450,6 +450,15 @@ mod tests {
         assert_eq!(s, "-99.9 tu");
     }
 
+    #[test]
+    fn display_other_test_units() {
+        let q = Quantity::<DoubleTestUnit>::new(3.0);
+        assert_eq!(format!("{}", q), "3 dtu");
+
+        let q = Quantity::<HalfTestUnit>::new(3.0);
+        assert_eq!(format!("{}", q), "3 htu");
+    }
+
     // ─────────────────────────────────────────────────────────────────────────────
     // Edge cases
     // ─────────────────────────────────────────────────────────────────────────────
@@ -499,6 +508,7 @@ mod tests {
     #[cfg(feature = "serde")]
     mod serde_tests {
         use super::*;
+        use serde::{Deserialize, Serialize};
 
         #[test]
         fn serialize_quantity() {
@@ -520,6 +530,55 @@ mod tests {
             let json = serde_json::to_string(&original).unwrap();
             let restored: TU = serde_json::from_str(&json).unwrap();
             assert!((restored.value() - original.value()).abs() < 1e-12);
+        }
+
+        #[derive(Debug, Serialize, Deserialize)]
+        struct WithUnit {
+            #[serde(with = "crate::serde_with_unit")]
+            q: TU,
+        }
+
+        #[test]
+        fn serde_with_unit_serializes_value_and_symbol() {
+            let v = WithUnit { q: TU::new(42.5) };
+            let json = serde_json::to_string(&v).unwrap();
+            assert_eq!(json, r#"{"q":{"value":42.5,"unit":"tu"}}"#);
+        }
+
+        #[test]
+        fn serde_with_unit_deserializes_with_or_without_unit_field() {
+            let v: WithUnit = serde_json::from_str(r#"{"q":{"value":10.0,"unit":"tu"}}"#).unwrap();
+            assert_eq!(v.q.value(), 10.0);
+
+            let v: WithUnit = serde_json::from_str(r#"{"q":{"value":10.0}}"#).unwrap();
+            assert_eq!(v.q.value(), 10.0);
+        }
+
+        #[test]
+        fn serde_with_unit_rejects_missing_value() {
+            let err = serde_json::from_str::<WithUnit>(r#"{"q":{"unit":"tu"}}"#).unwrap_err();
+            assert!(err.to_string().contains("missing field"));
+        }
+
+        #[test]
+        fn serde_with_unit_rejects_unit_mismatch() {
+            let err = serde_json::from_str::<WithUnit>(r#"{"q":{"value":1.0,"unit":"nope"}}"#)
+                .unwrap_err();
+            assert!(err.to_string().contains("unit mismatch"));
+        }
+
+        #[test]
+        fn serde_with_unit_rejects_duplicate_fields() {
+            let err =
+                serde_json::from_str::<WithUnit>(r#"{"q":{"value":1,"value":2}}"#).unwrap_err();
+            let msg = err.to_string();
+            assert!(msg.contains("duplicate field") && msg.contains("value"));
+
+            let err =
+                serde_json::from_str::<WithUnit>(r#"{"q":{"value":1,"unit":"tu","unit":"tu"}}"#)
+                    .unwrap_err();
+            let msg = err.to_string();
+            assert!(msg.contains("duplicate field") && msg.contains("unit"));
         }
     }
 }

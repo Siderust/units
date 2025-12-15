@@ -27,6 +27,9 @@ fn make_cstring(s: String) -> *mut core::ffi::c_char {
 }
 
 /// Serializes a quantity's numeric value as a JSON number string.
+///
+/// # Safety
+/// `out_json` must be non-null and valid for writing the resulting C string pointer.
 #[no_mangle]
 #[cfg(feature = "serde")]
 pub unsafe extern "C" fn qtty_quantity_to_json_value(
@@ -42,6 +45,10 @@ pub unsafe extern "C" fn qtty_quantity_to_json_value(
 }
 
 /// Deserializes a quantity's numeric value from a JSON number string and sets the unit.
+///
+/// # Safety
+/// `out` must be non-null and writable, and `json` must point to a valid
+/// null-terminated UTF-8 string.
 #[no_mangle]
 #[cfg(feature = "serde")]
 pub unsafe extern "C" fn qtty_quantity_from_json_value(
@@ -73,6 +80,9 @@ pub unsafe extern "C" fn qtty_quantity_from_json_value(
 }
 
 /// Serializes a quantity as a JSON object: {"value": f64, "unit_id": u32}.
+///
+/// # Safety
+/// `out_json` must be non-null and valid for writing the resulting C string pointer.
 #[no_mangle]
 #[cfg(feature = "serde")]
 pub unsafe extern "C" fn qtty_quantity_to_json(
@@ -92,6 +102,10 @@ pub unsafe extern "C" fn qtty_quantity_to_json(
 }
 
 /// Deserializes a quantity from a JSON object: {"value": f64, "unit_id": u32}.
+///
+/// # Safety
+/// `out` must be non-null and writable, and `json` must point to a valid
+/// null-terminated UTF-8 string.
 #[no_mangle]
 #[cfg(feature = "serde")]
 pub unsafe extern "C" fn qtty_quantity_from_json(
@@ -142,6 +156,9 @@ pub unsafe extern "C" fn qtty_quantity_from_json(
 /// When built without the `serde` feature, JSON functions are unavailable and no
 /// strings are allocated by the library. This function is provided for ABI
 /// stability and performs no action.
+///
+/// # Safety
+/// Pointer must either be null or originate from qtty-ffi JSON APIs.
 #[no_mangle]
 #[cfg(not(feature = "serde"))]
 pub unsafe extern "C" fn qtty_string_free(_ptr: *mut core::ffi::c_char) {
@@ -153,6 +170,9 @@ pub unsafe extern "C" fn qtty_string_free(_ptr: *mut core::ffi::c_char) {
 /// When `serde` is disabled, this function sets `*out_json` to null (if not
 /// null) and returns `QTTY_ERR_INVALID_VALUE` to indicate the operation is
 /// unsupported.
+///
+/// # Safety
+/// `out_json` must be non-null and writable.
 #[no_mangle]
 #[cfg(not(feature = "serde"))]
 pub unsafe extern "C" fn qtty_quantity_to_json_value(
@@ -170,6 +190,10 @@ pub unsafe extern "C" fn qtty_quantity_to_json_value(
 ///
 /// When `serde` is disabled, this function returns `QTTY_ERR_INVALID_VALUE` to
 /// indicate the operation is unsupported.
+///
+/// # Safety
+/// `out` must be non-null and writable, and `json` must point to a valid
+/// null-terminated string if not null.
 #[no_mangle]
 #[cfg(not(feature = "serde"))]
 pub unsafe extern "C" fn qtty_quantity_from_json_value(
@@ -188,6 +212,9 @@ pub unsafe extern "C" fn qtty_quantity_from_json_value(
 /// When `serde` is disabled, this function sets `*out_json` to null (if not
 /// null) and returns `QTTY_ERR_INVALID_VALUE` to indicate the operation is
 /// unsupported.
+///
+/// # Safety
+/// `out_json` must be non-null and writable.
 #[no_mangle]
 #[cfg(not(feature = "serde"))]
 pub unsafe extern "C" fn qtty_quantity_to_json(
@@ -205,6 +232,10 @@ pub unsafe extern "C" fn qtty_quantity_to_json(
 ///
 /// When `serde` is disabled, this function returns `QTTY_ERR_INVALID_VALUE` to
 /// indicate the operation is unsupported.
+///
+/// # Safety
+/// `out` must be non-null and writable, and `json` must point to a valid
+/// null-terminated string if not null.
 #[no_mangle]
 #[cfg(not(feature = "serde"))]
 pub unsafe extern "C" fn qtty_quantity_from_json(

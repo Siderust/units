@@ -5,7 +5,7 @@
 //! operate using `serde_json`. When disabled, stub implementations preserve the
 //! ABI and return error codes indicating the functionality is unavailable.
 
-use crate::{QttyQuantity, UnitId, QTTY_ERR_INVALID_VALUE, QTTY_ERR_NULL_OUT, QTTY_ERR_UNKNOWN_UNIT, QTTY_OK};
+use crate::{QttyQuantity, UnitId, QTTY_ERR_INVALID_VALUE, QTTY_ERR_NULL_OUT};
 
 /// Frees a C string allocated by qtty-ffi JSON functions.
 ///
@@ -115,7 +115,12 @@ pub unsafe extern "C" fn qtty_quantity_from_json(
     };
     let value = v.get("value").and_then(|x| x.as_f64());
     let unit_id_u32 = v.get("unit_id").and_then(|x| x.as_u64());
-    match (value, unit_id_u32.and_then(|u| u.try_into().ok()).and_then(UnitId::from_u32)) {
+    match (
+        value,
+        unit_id_u32
+            .and_then(|u| u.try_into().ok())
+            .and_then(UnitId::from_u32),
+    ) {
         (Some(val), Some(unit)) => {
             if registry::meta(unit).is_none() {
                 return QTTY_ERR_UNKNOWN_UNIT;
@@ -223,11 +228,20 @@ mod tests {
         let ok = unsafe { qtty_quantity_to_json_value(src, &mut json_ptr) };
         assert_eq!(ok, QTTY_OK);
         assert!(!json_ptr.is_null());
-        let s = unsafe { std::ffi::CStr::from_ptr(json_ptr) }.to_str().unwrap().to_string();
+        let s = unsafe { std::ffi::CStr::from_ptr(json_ptr) }
+            .to_str()
+            .unwrap()
+            .to_string();
         unsafe { qtty_string_free(json_ptr) };
 
         let mut out = QttyQuantity::new(0.0, UnitId::Meter);
-        let ok = unsafe { qtty_quantity_from_json_value(UnitId::Meter, std::ffi::CString::new(s).unwrap().as_ptr(), &mut out) };
+        let ok = unsafe {
+            qtty_quantity_from_json_value(
+                UnitId::Meter,
+                std::ffi::CString::new(s).unwrap().as_ptr(),
+                &mut out,
+            )
+        };
         assert_eq!(ok, QTTY_OK);
         assert!((out.value - 123.456).abs() < 1e-12);
         assert_eq!(out.unit, UnitId::Meter);
@@ -239,11 +253,16 @@ mod tests {
         let mut json_ptr: *mut core::ffi::c_char = core::ptr::null_mut();
         let ok = unsafe { qtty_quantity_to_json(src, &mut json_ptr) };
         assert_eq!(ok, QTTY_OK);
-        let s = unsafe { std::ffi::CStr::from_ptr(json_ptr) }.to_str().unwrap().to_string();
+        let s = unsafe { std::ffi::CStr::from_ptr(json_ptr) }
+            .to_str()
+            .unwrap()
+            .to_string();
         unsafe { qtty_string_free(json_ptr) };
 
         let mut out = QttyQuantity::new(0.0, UnitId::Meter);
-        let ok = unsafe { qtty_quantity_from_json(std::ffi::CString::new(s).unwrap().as_ptr(), &mut out) };
+        let ok = unsafe {
+            qtty_quantity_from_json(std::ffi::CString::new(s).unwrap().as_ptr(), &mut out)
+        };
         assert_eq!(ok, QTTY_OK);
         assert_eq!(out.unit, UnitId::Kilometer);
         assert!((out.value - 2.0).abs() < 1e-12);

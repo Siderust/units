@@ -197,8 +197,7 @@ fn generate_c_header(crate_dir: &str) {
         builder = builder.with_parse_expand_features(&features);
     }
 
-    match builder.generate()
-    {
+    match builder.generate() {
         Ok(bindings) => {
             bindings.write_to_file(&header_path);
             println!("cargo:rerun-if-changed=src/");

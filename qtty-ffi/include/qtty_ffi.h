@@ -916,6 +916,48 @@ const char *qtty_unit_name(UnitId unit);
  */
 uint32_t qtty_ffi_version(void);
 
+/*
+ Frees a C string allocated by qtty-ffi JSON functions.
+
+ # Safety
+ Pointer must have been allocated by qtty-ffi JSON APIs.
+ */
+void qtty_string_free(char *ptr);
+
+/*
+ Serializes a quantity's numeric value as a JSON number string.
+
+ # Safety
+ `out_json` must be non-null and valid for writing the resulting C string pointer.
+ */
+int32_t qtty_quantity_to_json_value(struct qtty_quantity_t src, char **out_json);
+
+/*
+ Deserializes a quantity's numeric value from a JSON number string and sets the unit.
+
+ # Safety
+ `out` must be non-null and writable, and `json` must point to a valid
+ null-terminated UTF-8 string.
+ */
+int32_t qtty_quantity_from_json_value(UnitId unit, const char *json, struct qtty_quantity_t *out);
+
+/*
+ Serializes a quantity as a JSON object: {"value": f64, "unit_id": u32}.
+
+ # Safety
+ `out_json` must be non-null and valid for writing the resulting C string pointer.
+ */
+int32_t qtty_quantity_to_json(struct qtty_quantity_t src, char **out_json);
+
+/*
+ Deserializes a quantity from a JSON object: {"value": f64, "unit_id": u32}.
+
+ # Safety
+ `out` must be non-null and writable, and `json` must point to a valid
+ null-terminated UTF-8 string.
+ */
+int32_t qtty_quantity_from_json(const char *json, struct qtty_quantity_t *out);
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif  // __cplusplus

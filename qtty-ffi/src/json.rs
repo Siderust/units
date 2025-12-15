@@ -7,6 +7,9 @@
 
 use crate::{QttyQuantity, UnitId, QTTY_ERR_INVALID_VALUE, QTTY_ERR_NULL_OUT};
 
+#[cfg(feature = "serde")]
+use crate::{registry, QTTY_ERR_UNKNOWN_UNIT, QTTY_OK};
+
 /// Frees a C string allocated by qtty-ffi JSON functions.
 ///
 /// # Safety

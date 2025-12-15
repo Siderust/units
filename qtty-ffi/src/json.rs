@@ -5,7 +5,7 @@
 //! operate using `serde_json`. When disabled, stub implementations preserve the
 //! ABI and return error codes indicating the functionality is unavailable.
 
-use crate::{registry, QttyQuantity, UnitId, QTTY_ERR_INVALID_VALUE, QTTY_ERR_NULL_OUT, QTTY_ERR_UNKNOWN_UNIT, QTTY_OK};
+use crate::{QttyQuantity, UnitId, QTTY_ERR_INVALID_VALUE, QTTY_ERR_NULL_OUT, QTTY_ERR_UNKNOWN_UNIT, QTTY_OK};
 
 /// Frees a C string allocated by qtty-ffi JSON functions.
 ///

@@ -32,7 +32,9 @@ fn make_cstring(s: String) -> *mut core::ffi::c_char {
 /// Serializes a quantity's numeric value as a JSON number string.
 ///
 /// # Safety
-/// `out_json` must be non-null and valid for writing the resulting C string pointer.
+/// - `out_json` must be non-null and point to writable storage for a `*mut c_char`.
+/// - On success the function stores an allocated C string at `*out_json` which
+///   the caller must free with `qtty_string_free`.
 #[no_mangle]
 #[cfg(feature = "serde")]
 pub unsafe extern "C" fn qtty_quantity_to_json_value(
@@ -50,8 +52,10 @@ pub unsafe extern "C" fn qtty_quantity_to_json_value(
 /// Deserializes a quantity's numeric value from a JSON number string and sets the unit.
 ///
 /// # Safety
-/// `out` must be non-null and writable, and `json` must point to a valid
-/// null-terminated UTF-8 string.
+/// - `out` must be non-null and point to valid writable storage for a `QttyQuantity`.
+/// - If `json` is non-null it must be a valid null-terminated C string (UTF-8);
+///   invalid input will cause the function to return an error code without
+///   modifying `out`.
 #[no_mangle]
 #[cfg(feature = "serde")]
 pub unsafe extern "C" fn qtty_quantity_from_json_value(
@@ -85,7 +89,9 @@ pub unsafe extern "C" fn qtty_quantity_from_json_value(
 /// Serializes a quantity as a JSON object: {"value": f64, "unit_id": u32}.
 ///
 /// # Safety
-/// `out_json` must be non-null and valid for writing the resulting C string pointer.
+/// - `out_json` must be non-null and point to writable storage for a `*mut c_char`.
+/// - On success the function stores an allocated C string at `*out_json` which
+///   the caller must free with `qtty_string_free`.
 #[no_mangle]
 #[cfg(feature = "serde")]
 pub unsafe extern "C" fn qtty_quantity_to_json(
@@ -107,8 +113,10 @@ pub unsafe extern "C" fn qtty_quantity_to_json(
 /// Deserializes a quantity from a JSON object: {"value": f64, "unit_id": u32}.
 ///
 /// # Safety
-/// `out` must be non-null and writable, and `json` must point to a valid
-/// null-terminated UTF-8 string.
+/// - `out` must be non-null and point to valid writable storage for a `QttyQuantity`.
+/// - If `json` is non-null it must be a valid null-terminated C string (UTF-8);
+///   invalid input will cause the function to return an error code without
+///   modifying `out`.
 #[no_mangle]
 #[cfg(feature = "serde")]
 pub unsafe extern "C" fn qtty_quantity_from_json(
@@ -161,7 +169,9 @@ pub unsafe extern "C" fn qtty_quantity_from_json(
 /// stability and performs no action.
 ///
 /// # Safety
-/// Pointer must either be null or originate from qtty-ffi JSON APIs.
+/// The pointer, if non-null, must be either null or a pointer previously
+/// allocated by qtty-ffi JSON APIs. This stub performs no action when the
+/// `serde` feature is disabled; callers may still pass null.
 #[no_mangle]
 #[cfg(not(feature = "serde"))]
 pub unsafe extern "C" fn qtty_string_free(_ptr: *mut core::ffi::c_char) {
@@ -175,7 +185,10 @@ pub unsafe extern "C" fn qtty_string_free(_ptr: *mut core::ffi::c_char) {
 /// unsupported.
 ///
 /// # Safety
-/// `out_json` must be non-null and writable.
+/// - `out_json` must be a valid pointer to writable storage for a `*mut c_char`.
+/// - When `serde` is disabled this stub writes null to `*out_json` and
+///   returns `QTTY_ERR_INVALID_VALUE` to indicate the operation is
+///   unsupported.
 #[no_mangle]
 #[cfg(not(feature = "serde"))]
 pub unsafe extern "C" fn qtty_quantity_to_json_value(
@@ -195,8 +208,10 @@ pub unsafe extern "C" fn qtty_quantity_to_json_value(
 /// indicate the operation is unsupported.
 ///
 /// # Safety
-/// `out` must be non-null and writable, and `json` must point to a valid
-/// null-terminated string if not null.
+/// - `_out` must be a valid, non-null pointer to writable `QttyQuantity` storage.
+/// - `_json`, if non-null, must be a valid null-terminated C string. When
+///   `serde` is disabled this stub does not parse input and returns
+///   `QTTY_ERR_INVALID_VALUE`.
 #[no_mangle]
 #[cfg(not(feature = "serde"))]
 pub unsafe extern "C" fn qtty_quantity_from_json_value(
@@ -217,7 +232,10 @@ pub unsafe extern "C" fn qtty_quantity_from_json_value(
 /// unsupported.
 ///
 /// # Safety
-/// `out_json` must be non-null and writable.
+/// - `out_json` must be a valid pointer to writable storage for a `*mut c_char`.
+/// - When `serde` is disabled this stub writes null to `*out_json` and
+///   returns `QTTY_ERR_INVALID_VALUE` to indicate the operation is
+///   unsupported.
 #[no_mangle]
 #[cfg(not(feature = "serde"))]
 pub unsafe extern "C" fn qtty_quantity_to_json(
@@ -237,8 +255,10 @@ pub unsafe extern "C" fn qtty_quantity_to_json(
 /// indicate the operation is unsupported.
 ///
 /// # Safety
-/// `out` must be non-null and writable, and `json` must point to a valid
-/// null-terminated string if not null.
+/// - `_out` must be a valid, non-null pointer to writable `QttyQuantity` storage.
+/// - `_json`, if non-null, must be a valid null-terminated C string. When
+///   `serde` is disabled this stub does not parse input and returns
+///   `QTTY_ERR_INVALID_VALUE`.
 #[no_mangle]
 #[cfg(not(feature = "serde"))]
 pub unsafe extern "C" fn qtty_quantity_from_json(
@@ -300,5 +320,65 @@ mod tests {
         assert_eq!(ok, QTTY_OK);
         assert_eq!(out.unit, UnitId::Kilometer);
         assert!((out.value - 2.0).abs() < 1e-12);
+    }
+
+    #[test]
+    fn json_apis_reject_null_out_pointers() {
+        let src = QttyQuantity::new(1.0, UnitId::Meter);
+        let code = unsafe { qtty_quantity_to_json_value(src, core::ptr::null_mut()) };
+        assert_eq!(code, QTTY_ERR_NULL_OUT);
+
+        let code = unsafe { qtty_quantity_to_json(src, core::ptr::null_mut()) };
+        assert_eq!(code, QTTY_ERR_NULL_OUT);
+
+        let code = unsafe {
+            qtty_quantity_from_json_value(UnitId::Meter, std::ptr::null(), core::ptr::null_mut())
+        };
+        assert_eq!(code, QTTY_ERR_NULL_OUT);
+
+        let code = unsafe { qtty_quantity_from_json(std::ptr::null(), core::ptr::null_mut()) };
+        assert_eq!(code, QTTY_ERR_NULL_OUT);
+    }
+
+    #[test]
+    fn from_json_value_rejects_null_and_invalid_inputs() {
+        let mut out = QttyQuantity::new(0.0, UnitId::Meter);
+
+        let code =
+            unsafe { qtty_quantity_from_json_value(UnitId::Meter, std::ptr::null(), &mut out) };
+        assert_eq!(code, QTTY_ERR_INVALID_VALUE);
+
+        let non_utf8 = std::ffi::CString::from_vec_with_nul(vec![0xFF, 0]).unwrap();
+        let code =
+            unsafe { qtty_quantity_from_json_value(UnitId::Meter, non_utf8.as_ptr(), &mut out) };
+        assert_eq!(code, QTTY_ERR_INVALID_VALUE);
+
+        let bad = std::ffi::CString::new("not-a-number").unwrap();
+        let code = unsafe { qtty_quantity_from_json_value(UnitId::Meter, bad.as_ptr(), &mut out) };
+        assert_eq!(code, QTTY_ERR_INVALID_VALUE);
+    }
+
+    #[test]
+    fn from_json_rejects_invalid_unit_id_and_payloads() {
+        let mut out = QttyQuantity::new(0.0, UnitId::Meter);
+
+        let code = unsafe { qtty_quantity_from_json(std::ptr::null(), &mut out) };
+        assert_eq!(code, QTTY_ERR_INVALID_VALUE);
+
+        let non_utf8 = std::ffi::CString::from_vec_with_nul(vec![0xFF, 0]).unwrap();
+        let code = unsafe { qtty_quantity_from_json(non_utf8.as_ptr(), &mut out) };
+        assert_eq!(code, QTTY_ERR_INVALID_VALUE);
+
+        let bad_json = std::ffi::CString::new("{").unwrap();
+        let code = unsafe { qtty_quantity_from_json(bad_json.as_ptr(), &mut out) };
+        assert_eq!(code, QTTY_ERR_INVALID_VALUE);
+
+        let missing_value = std::ffi::CString::new(r#"{"unit_id":10011}"#).unwrap();
+        let code = unsafe { qtty_quantity_from_json(missing_value.as_ptr(), &mut out) };
+        assert_eq!(code, QTTY_ERR_INVALID_VALUE);
+
+        let invalid_unit_id = std::ffi::CString::new(r#"{"value":1.0,"unit_id":999999}"#).unwrap();
+        let code = unsafe { qtty_quantity_from_json(invalid_unit_id.as_ptr(), &mut out) };
+        assert_eq!(code, QTTY_ERR_UNKNOWN_UNIT);
     }
 }

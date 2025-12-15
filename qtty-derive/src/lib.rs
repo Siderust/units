@@ -157,4 +157,74 @@ fn parse_unit_attribute(attrs: &[Attribute]) -> syn::Result<UnitAttribute> {
 }
 
 #[cfg(test)]
-mod tests {}
+mod tests {
+    use super::*;
+    use syn::parse_quote;
+
+    #[test]
+    fn derive_unit_impl_generates_expected_impls() {
+        let input: DeriveInput = parse_quote! {
+            #[unit(symbol = "m", dimension = LengthDim, ratio = 1000.0,)]
+            pub enum MyUnit {}
+        };
+
+        let tokens = derive_unit_impl(input).unwrap();
+        let s = tokens.to_string();
+        assert!(s.contains("impl crate :: Unit for MyUnit"));
+        assert!(s.contains("const RATIO : f64 = 1000.0"));
+        assert!(s.contains("type Dim = LengthDim"));
+        assert!(s.contains("const SYMBOL : & 'static str = \"m\""));
+        assert!(s.contains("impl :: core :: fmt :: Display for crate :: Quantity < MyUnit >"));
+    }
+
+    #[test]
+    fn derive_unit_impl_errors_without_unit_attr() {
+        let input: DeriveInput = parse_quote! {
+            pub struct NoAttrUnit;
+        };
+
+        let err = derive_unit_impl(input).unwrap_err();
+        assert!(err.to_string().contains("missing #[unit(...)] attribute"));
+    }
+
+    #[test]
+    fn parse_unit_attribute_errors_on_unknown_key() {
+        let input: DeriveInput = parse_quote! {
+            #[unit(symbol = "m", dimension = LengthDim, ratio = 1.0, nope = 123)]
+            pub struct BadAttr;
+        };
+
+        let err = derive_unit_impl(input).unwrap_err();
+        assert!(err.to_string().contains("unknown attribute `nope`"));
+    }
+
+    #[test]
+    fn parse_unit_attribute_errors_on_missing_required_fields() {
+        let missing_symbol: DeriveInput = parse_quote! {
+            #[unit(dimension = LengthDim, ratio = 1.0)]
+            pub struct MissingSymbol;
+        };
+        let err = derive_unit_impl(missing_symbol).unwrap_err();
+        assert!(err
+            .to_string()
+            .contains("missing required attribute `symbol`"));
+
+        let missing_dimension: DeriveInput = parse_quote! {
+            #[unit(symbol = "m", ratio = 1.0)]
+            pub struct MissingDimension;
+        };
+        let err = derive_unit_impl(missing_dimension).unwrap_err();
+        assert!(err
+            .to_string()
+            .contains("missing required attribute `dimension`"));
+
+        let missing_ratio: DeriveInput = parse_quote! {
+            #[unit(symbol = "m", dimension = LengthDim)]
+            pub struct MissingRatio;
+        };
+        let err = derive_unit_impl(missing_ratio).unwrap_err();
+        assert!(err
+            .to_string()
+            .contains("missing required attribute `ratio`"));
+    }
+}

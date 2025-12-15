@@ -185,10 +185,19 @@ fn generate_c_header(crate_dir: &str) {
     };
 
     let header_path = out_dir.join("qtty_ffi.h");
-    match cbindgen::Builder::new()
-        .with_crate(crate_dir)
-        .with_config(config)
-        .generate()
+    let mut builder = cbindgen::Builder::new();
+    builder = builder.with_crate(crate_dir).with_config(config);
+    // Propagate enabled Cargo features to cbindgen so that cfg-gated
+    // extern functions (e.g., serde JSON APIs) appear in the header.
+    let mut features: Vec<String> = Vec::new();
+    if env::var("CARGO_FEATURE_SERDE").is_ok() {
+        features.push("serde".into());
+    }
+    if !features.is_empty() {
+        builder = builder.with_parse_expand_features(&features);
+    }
+
+    match builder.generate()
     {
         Ok(bindings) => {
             bindings.write_to_file(&header_path);

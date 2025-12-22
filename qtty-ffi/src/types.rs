@@ -366,11 +366,13 @@ impl QttyDerivedQuantity {
         }
 
         // Convert numerator: e.g., 100 m -> ? km
-        let num_converted = crate::registry::convert_value(self.value, self.numerator, target_num).ok()?;
+        let num_converted =
+            crate::registry::convert_value(self.value, self.numerator, target_num).ok()?;
 
         // Convert denominator scale: e.g., 1 s -> ? h (0.000278 h)
         // If 1 s = 0.000278 h, then dividing by that gives us the factor
-        let den_converted = crate::registry::convert_value(1.0, self.denominator, target_den).ok()?;
+        let den_converted =
+            crate::registry::convert_value(1.0, self.denominator, target_den).ok()?;
 
         // Result = (num in new units) / (den scale factor)
         // 100 m = 0.1 km, 1 s = 1/3600 h

@@ -82,7 +82,9 @@ fn generate_unit_enum(units: &[UnitDef], out_dir: &str) {
     );
     code.push_str("#[repr(u32)]\n");
     code.push_str("#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]\n");
-    code.push_str("#[cfg_attr(feature = \"python\", pyo3::pyclass(eq, eq_int, module = \"qtty\"))]\n");
+    code.push_str(
+        "#[cfg_attr(feature = \"python\", pyo3::pyclass(eq, eq_int, module = \"qtty\"))]\n",
+    );
     code.push_str("pub enum UnitId {\n");
 
     for unit in units {
@@ -91,7 +93,7 @@ fn generate_unit_enum(units: &[UnitDef], out_dir: &str) {
     }
 
     code.push_str("}\n\n");
-    
+
     // Add pickle support methods when python feature is enabled
     code.push_str("#[cfg(feature = \"python\")]\n");
     code.push_str("#[pyo3::pymethods]\n");

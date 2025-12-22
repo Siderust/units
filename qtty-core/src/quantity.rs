@@ -7,6 +7,9 @@ use core::ops::*;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
+#[cfg(feature = "pyo3")]
+use pyo3::prelude::*;
+
 /// A quantity with a specific unit.
 ///
 /// `Quantity<U>` wraps an `f64` value together with phantom type information
@@ -471,5 +474,24 @@ pub mod serde_with_unit {
             &["value", "unit"],
             QuantityVisitor(core::marker::PhantomData),
         )
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PyO3 support
+// ─────────────────────────────────────────────────────────────────────────────
+
+#[cfg(feature = "pyo3")]
+impl<U: Unit> IntoPy<PyObject> for Quantity<U> {
+    fn into_py(self, py: Python) -> PyObject {
+        self.value().into_py(py)
+    }
+}
+
+#[cfg(feature = "pyo3")]
+impl<U: Unit> FromPyObject<'_> for Quantity<U> {
+    fn extract_bound(ob: &pyo3::Bound<'_, PyAny>) -> PyResult<Self> {
+        let value = f64::extract_bound(ob)?;
+        Ok(Quantity::new(value))
     }
 }

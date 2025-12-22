@@ -275,6 +275,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "num-bigint"
+version = "0.4.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a5e44f723f1133c9deac646763579fdb3ac745e418f2a7af9cd0c431da1f20b9"
+dependencies = [
+ "num-integer",
+ "num-traits",
+]
+
+[[package]]
+name = "num-integer"
+version = "0.1.46"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7969661fd2958a5cb096e56c8e1ad0444ac2bbcd0061bd28660485a44879858f"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
 name = "num-traits"
 version = "0.2.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -348,6 +367,7 @@ dependencies = [
  "indoc",
  "libc",
  "memoffset",
+ "num-bigint",
  "once_cell",
  "portable-atomic",
  "pyo3-build-config",
@@ -414,6 +434,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "qtty"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f7aa6f5d7ddc403785d486942b59fd86cc63f1edfbaa10a088c5130579240fb1"
+dependencies = [
+ "qtty-core 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "qtty-derive 0.1.0",
+]
+
+[[package]]
 name = "qtty-core"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -430,9 +460,21 @@ dependencies = [
  "approx",
  "libm",
  "proptest",
+ "pyo3",
  "qtty-derive 0.1.0",
+ "qtty-ffi 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "qtty-core"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "026010b8c8f17bfd4b8c2f55b3be93fc45cc3fa23737f63de61586cef3320df9"
+dependencies = [
+ "libm",
+ "qtty-derive 0.1.0",
 ]
 
 [[package]]
@@ -463,9 +505,19 @@ dependencies = [
  "approx",
  "cbindgen",
  "pyo3",
- "qtty",
+ "qtty 0.2.0",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "qtty-ffi"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ceba16359691105291f2a719bce5979c51ce9f48956467abb382c50457258525"
+dependencies = [
+ "cbindgen",
+ "qtty 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

@@ -3,6 +3,17 @@ All notable changes to this project are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2025-12-22
+
+### Added
+- Optional `python` feature for `qtty-ffi` that exposes `UnitId` as a PyO3 `pyclass` with pickle support, enabling Python consumers alongside C.
+- Generated unit symbol lookups and new `UnitId::symbol()` accessor for retrieving canonical unit symbols from FFI.
+- Convenience APIs on `QttyQuantity` for dimension/compatibility queries, conversions, and basic arithmetic on FFI quantities.
+- `QttyDerivedQuantity` FFI type for compound quantities (numerator/denominator) with conversion and scalar helpers (e.g., velocities).
+
+### Changed
+- `qtty-ffi` build tooling now emits symbol tables and uses the updated cbindgen (0.29.2) plus parser deps to support Python-aware builds.
+
 ## [0.2.0] - 2025-12-14
 
 ### Added

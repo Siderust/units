@@ -15,9 +15,15 @@ crate-type = ["cdylib", "staticlib", "rlib"]
 
 [dependencies]
 qtty = { version = "0.2.0", path = "../qtty" }
+pyo3 = { version = "0.22", optional = true }
+
+[features]
+python = ["pyo3"]
 
 [build-dependencies]
 cbindgen = "0.27"
+syn = { version = "2.0", features = ["full"] }
+quote = "1.0"
 
 [dev-dependencies]
 approx = "0.5"

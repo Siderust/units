@@ -52,8 +52,6 @@
 use crate::{Dimension, Quantity, Unit};
 use core::f64::consts::TAU;
 use qtty_derive::Unit;
-#[cfg(feature = "python")]
-use pyo3::pyclass;
 
 #[inline]
 fn rem_euclid(x: f64, modulus: f64) -> f64 {

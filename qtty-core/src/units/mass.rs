@@ -17,8 +17,6 @@
 
 use crate::{Dimension, Quantity, Unit};
 use qtty_derive::Unit;
-#[cfg(feature = "python")]
-use pyo3::pyclass;
 
 /// Dimension tag for mass.
 pub enum Mass {}

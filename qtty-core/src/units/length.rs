@@ -37,8 +37,6 @@
 use crate::{Dimension, Quantity, Unit};
 use core::f64::consts::PI;
 use qtty_derive::Unit;
-#[cfg(feature = "python")]
-use pyo3::pyclass;
 
 /// Dimension tag for length.
 pub enum Length {}

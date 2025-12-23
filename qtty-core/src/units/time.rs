@@ -24,8 +24,6 @@
 
 use crate::{Dimension, Quantity, Unit};
 use qtty_derive::Unit;
-#[cfg(feature = "python")]
-use pyo3::pyclass;
 
 /// Dimension tag for time.
 pub enum Time {}

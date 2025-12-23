@@ -101,6 +101,9 @@ pub use unit::{Per, Simplify, Unit, Unitless};
 #[cfg(feature = "serde")]
 pub use quantity::serde_with_unit;
 
+#[cfg(feature = "serde")]
+pub use quantity::serde_f64;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Predefined unit modules (grouped by dimension)
 // ─────────────────────────────────────────────────────────────────────────────

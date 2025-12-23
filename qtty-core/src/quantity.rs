@@ -7,6 +7,9 @@ use core::ops::*;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
+#[cfg(feature = "tiberius")]
+use tiberius::{ToSql, FromSql, ColumnData};
+
 /// A quantity with a specific unit.
 ///
 /// `Quantity<U>` wraps an `f64` value together with phantom type information
@@ -471,5 +474,72 @@ pub mod serde_with_unit {
             &["value", "unit"],
             QuantityVisitor(core::marker::PhantomData),
         )
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Simple f64-based serde helpers (for direct numeric serialization)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Serde module for serializing/deserializing `Quantity<U>` as a raw `f64`.
+///
+/// Use with `#[serde(with = "qtty_core::serde_f64")]` on a field.
+///
+/// # Example
+/// ```ignore
+/// use qtty_core::angular::Degrees;
+/// use serde::{Serialize, Deserialize};
+///
+/// #[derive(Serialize, Deserialize)]
+/// struct Coords {
+///     #[serde(with = "qtty_core::serde_f64")]
+///     ra: Degrees,
+///     #[serde(with = "qtty_core::serde_f64")]
+///     dec: Degrees,
+/// }
+/// ```
+#[cfg(feature = "serde")]
+pub mod serde_f64 {
+    use super::*;
+
+    /// Serialize a `Quantity<U>` as a raw f64 value.
+    pub fn serialize<U: Unit, S>(qty: &Quantity<U>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_f64(qty.value())
+    }
+
+    /// Deserialize a `Quantity<U>` from a raw f64 value.
+    pub fn deserialize<'de, U: Unit, D>(deserializer: D) -> Result<Quantity<U>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let val = f64::deserialize(deserializer)?;
+        Ok(Quantity::new(val))
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tiberius (SQL Server) database support
+// ─────────────────────────────────────────────────────────────────────────────
+
+#[cfg(feature = "tiberius")]
+impl<U: Unit + Send + Sync> ToSql for Quantity<U> {
+    fn to_sql(&self) -> ColumnData<'_> {
+        ColumnData::F64(Some(self.value()))
+    }
+}
+
+#[cfg(feature = "tiberius")]
+impl<U: Unit> FromSql<'_> for Quantity<U> {
+    fn from_sql(value: &ColumnData<'_>) -> tiberius::Result<Option<Self>> {
+        match value {
+            ColumnData::F64(Some(val)) => Ok(Some(Quantity::new(*val))),
+            ColumnData::F32(Some(val)) => Ok(Some(Quantity::new(*val as f64))),
+            ColumnData::I32(Some(val)) => Ok(Some(Quantity::new(*val as f64))),
+            ColumnData::I64(Some(val)) => Ok(Some(Quantity::new(*val as f64))),
+            _ => Ok(None),
+        }
     }
 }

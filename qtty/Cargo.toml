@@ -16,6 +16,7 @@ default = ["std"]
 std = ["qtty-core/std"]
 serde = ["qtty-core/serde"]
 python = ["qtty-core/python"]
+tiberius = ["qtty-core/tiberius"]
 
 [dependencies]
 qtty-core = { version = "0.2.0", path = "../qtty-core", default-features = false }

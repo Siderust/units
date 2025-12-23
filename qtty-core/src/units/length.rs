@@ -37,6 +37,8 @@
 use crate::{Dimension, Quantity, Unit};
 use core::f64::consts::PI;
 use qtty_derive::Unit;
+#[cfg(feature = "python")]
+use pyo3::pyclass;
 
 /// Dimension tag for length.
 pub enum Length {}
@@ -52,6 +54,7 @@ impl<T: Unit<Dim = Length>> LengthUnit for T {}
 
 /// Metre (SI base unit).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "m", dimension = Length, ratio = 1.0)]
 pub struct Meter;
 /// A quantity measured in metres.
@@ -61,6 +64,7 @@ pub const M: Meters = Meters::new(1.0);
 
 /// Kilometre (`1000 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Km", dimension = Length, ratio = 1_000.0)]
 pub struct Kilometer;
 /// Type alias shorthand for [`Kilometer`].
@@ -72,6 +76,7 @@ pub const KM: Kilometers = Kilometers::new(1.0);
 
 /// Centimetre (`1e-2 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "cm", dimension = Length, ratio = 1e-2)]
 pub struct Centimeter;
 /// Type alias shorthand for [`Centimeter`].
@@ -83,6 +88,7 @@ pub const CM: Centimeters = Centimeters::new(1.0);
 
 /// Millimetre (`1e-3 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "mm", dimension = Length, ratio = 1e-3)]
 pub struct Millimeter;
 /// Type alias shorthand for [`Millimeter`].
@@ -94,6 +100,7 @@ pub const MM: Millimeters = Millimeters::new(1.0);
 
 /// Micrometre (`1e-6 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "um", dimension = Length, ratio = 1e-6)]
 pub struct Micrometer;
 /// Type alias shorthand for [`Micrometer`].
@@ -105,6 +112,7 @@ pub const UM: Micrometers = Micrometers::new(1.0);
 
 /// Nanometre (`1e-9 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "nm", dimension = Length, ratio = 1e-9)]
 pub struct Nanometer;
 /// Type alias shorthand for [`Nanometer`].
@@ -116,6 +124,7 @@ pub const NM: Nanometers = Nanometers::new(1.0);
 
 /// Picometre (`1e-12 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "pm", dimension = Length, ratio = 1e-12)]
 pub struct Picometer;
 /// A quantity measured in picometres.
@@ -125,6 +134,7 @@ pub const PMETER: Picometers = Picometers::new(1.0);
 
 /// Femtometre (`1e-15 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "fm", dimension = Length, ratio = 1e-15)]
 pub struct Femtometer;
 /// A quantity measured in femtometres.
@@ -134,6 +144,7 @@ pub const FM: Femtometers = Femtometers::new(1.0);
 
 /// Attometre (`1e-18 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "am", dimension = Length, ratio = 1e-18)]
 pub struct Attometer;
 /// A quantity measured in attometres.
@@ -143,6 +154,7 @@ pub const AM: Attometers = Attometers::new(1.0);
 
 /// Zeptometre (`1e-21 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "zm", dimension = Length, ratio = 1e-21)]
 pub struct Zeptometer;
 /// A quantity measured in zeptometres.
@@ -152,6 +164,7 @@ pub const ZMETER: Zeptometers = Zeptometers::new(1.0);
 
 /// Yoctometre (`1e-24 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "ym", dimension = Length, ratio = 1e-24)]
 pub struct Yoctometer;
 /// A quantity measured in yoctometres.
@@ -161,6 +174,7 @@ pub const YMETER: Yoctometers = Yoctometers::new(1.0);
 
 /// Megametre (`1e6 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Mm", dimension = Length, ratio = 1e6)]
 pub struct Megameter;
 /// Type alias shorthand for [`Megameter`].
@@ -172,6 +186,7 @@ pub const MEGAMETER: Megameters = Megameters::new(1.0);
 
 /// Decimetre (`1e-1 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "dm", dimension = Length, ratio = 1e-1)]
 pub struct Decimeter;
 /// A quantity measured in decimetres.
@@ -181,6 +196,7 @@ pub const DM: Decimeters = Decimeters::new(1.0);
 
 /// Decametre (`1e1 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "dam", dimension = Length, ratio = 1e1)]
 pub struct Decameter;
 /// A quantity measured in decametres.
@@ -190,6 +206,7 @@ pub const DAM: Decameters = Decameters::new(1.0);
 
 /// Hectometre (`1e2 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "hm", dimension = Length, ratio = 1e2)]
 pub struct Hectometer;
 /// A quantity measured in hectometres.
@@ -199,6 +216,7 @@ pub const HM: Hectometers = Hectometers::new(1.0);
 
 /// Gigametre (`1e9 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Gm", dimension = Length, ratio = 1e9)]
 pub struct Gigameter;
 /// A quantity measured in gigametres.
@@ -208,6 +226,7 @@ pub const GM: Gigameters = Gigameters::new(1.0);
 
 /// Terametre (`1e12 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Tm", dimension = Length, ratio = 1e12)]
 pub struct Terameter;
 /// A quantity measured in terametres.
@@ -217,6 +236,7 @@ pub const TM: Terameters = Terameters::new(1.0);
 
 /// Petametre (`1e15 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Pm", dimension = Length, ratio = 1e15)]
 pub struct Petameter;
 /// A quantity measured in petametres.
@@ -226,6 +246,7 @@ pub const PM: Petameters = Petameters::new(1.0);
 
 /// Exametre (`1e18 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Em", dimension = Length, ratio = 1e18)]
 pub struct Exameter;
 /// A quantity measured in exametres.
@@ -235,6 +256,7 @@ pub const EM: Exameters = Exameters::new(1.0);
 
 /// Zettametre (`1e21 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Zm", dimension = Length, ratio = 1e21)]
 pub struct Zettameter;
 /// A quantity measured in zettametres.
@@ -244,6 +266,7 @@ pub const ZM: Zettameters = Zettameters::new(1.0);
 
 /// Yottametre (`1e24 m`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Ym", dimension = Length, ratio = 1e24)]
 pub struct Yottameter;
 /// A quantity measured in yottametres.
@@ -257,6 +280,7 @@ pub const YM: Yottameters = Yottameters::new(1.0);
 
 /// Astronomical unit (au). Exact (IAU 2012): metres per au.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "au", dimension = Length, ratio = 149_597_870_700.0)]
 pub struct AstronomicalUnit;
 /// Type alias shorthand for [`AstronomicalUnit`].
@@ -275,6 +299,7 @@ const METERS_PER_LIGHT_YEAR: f64 = SPEED_OF_LIGHT_M_PER_S * SECONDS_PER_JULIAN_Y
 
 /// Light-year (ly): distance light travels in one Julian year (`365.25 d`) at `c = 299_792_458 m/s`.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "ly", dimension = Length, ratio = METERS_PER_LIGHT_YEAR)]
 pub struct LightYear;
 /// Type alias shorthand for [`LightYear`].
@@ -286,6 +311,7 @@ pub const LY: LightYears = LightYears::new(1.0);
 
 /// Parsec (pc): `pc = au * 648000 / π` (exact given au).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "pc", dimension = Length, ratio = 149_597_870_700.0 * (648_000.0 / PI))]
 pub struct Parsec;
 /// Type alias shorthand for [`Parsec`].
@@ -297,6 +323,7 @@ pub const PC: Parsecs = Parsecs::new(1.0);
 
 /// Kiloparsec (kpc): `1e3 pc`.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "kpc", dimension = Length, ratio = 1_000.0 * 149_597_870_700.0 * (648_000.0 / PI))]
 pub struct Kiloparsec;
 /// A quantity measured in kiloparsecs.
@@ -306,6 +333,7 @@ pub const KPC: Kiloparsecs = Kiloparsecs::new(1.0);
 
 /// Megaparsec (Mpc): `1e6 pc`.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Mpc", dimension = Length, ratio = 1_000_000.0 * 149_597_870_700.0 * (648_000.0 / PI))]
 pub struct Megaparsec;
 /// A quantity measured in megaparsecs.
@@ -315,6 +343,7 @@ pub const MPC: Megaparsecs = Megaparsecs::new(1.0);
 
 /// Gigaparsec (Gpc): `1e9 pc`.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Gpc", dimension = Length, ratio = 1_000_000_000.0 * 149_597_870_700.0 * (648_000.0 / PI))]
 pub struct Gigaparsec;
 /// A quantity measured in gigaparsecs.
@@ -328,6 +357,7 @@ pub const GPC: Gigaparsecs = Gigaparsecs::new(1.0);
 
 /// Inch (`0.0254 m` exactly).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "in", dimension = Length, ratio = 254.0 / 10_000.0)]
 pub struct Inch;
 /// A quantity measured in inches.
@@ -337,6 +367,7 @@ pub const INCH: Inches = Inches::new(1.0);
 
 /// Foot (`0.3048 m` exactly).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "ft", dimension = Length, ratio = 3048.0 / 10_000.0)]
 pub struct Foot;
 /// A quantity measured in feet.
@@ -346,6 +377,7 @@ pub const FT: Feet = Feet::new(1.0);
 
 /// Yard (`0.9144 m` exactly).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "yd", dimension = Length, ratio = 9144.0 / 10_000.0)]
 pub struct Yard;
 /// A quantity measured in yards.
@@ -355,6 +387,7 @@ pub const YD: Yards = Yards::new(1.0);
 
 /// (Statute) mile (`1609.344 m` exactly).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "mi", dimension = Length, ratio = 1_609_344.0 / 1_000.0)]
 pub struct Mile;
 /// A quantity measured in miles.
@@ -364,6 +397,7 @@ pub const MI: Miles = Miles::new(1.0);
 
 /// Nautical mile (`1852 m` exactly).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "nmi", dimension = Length, ratio = 1_852.0)]
 pub struct NauticalMile;
 /// A quantity measured in nautical miles.
@@ -373,6 +407,7 @@ pub const NMI: NauticalMiles = NauticalMiles::new(1.0);
 
 /// Chain (`66 ft` exactly).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "ch", dimension = Length, ratio = 66.0 * (3048.0 / 10_000.0))]
 pub struct Chain;
 /// A quantity measured in chains.
@@ -382,6 +417,7 @@ pub const CHAIN: Chains = Chains::new(1.0);
 
 /// Rod / pole / perch (`16.5 ft` exactly).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "rd", dimension = Length, ratio = 16.5 * (3048.0 / 10_000.0))]
 pub struct Rod;
 /// A quantity measured in rods/poles/perches.
@@ -391,6 +427,7 @@ pub const ROD: Rods = Rods::new(1.0);
 
 /// Link (`1/100 of a chain`, i.e. `0.66 ft`).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "lk", dimension = Length, ratio = (66.0 / 100.0) * (3048.0 / 10_000.0))]
 pub struct Link;
 /// A quantity measured in links.
@@ -400,6 +437,7 @@ pub const LINK: Links = Links::new(1.0);
 
 /// Fathom (`6 ft` exactly).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "ftm", dimension = Length, ratio = 6.0 * (3048.0 / 10_000.0))]
 pub struct Fathom;
 /// A quantity measured in fathoms.
@@ -413,6 +451,7 @@ pub const FTM: Fathoms = Fathoms::new(1.0);
 
 /// Earth meridional circumference (approximate mean value).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Cmer", dimension = Length, ratio = 40_007_863.0)]
 pub struct EarthMeridionalCircumference;
 /// A quantity measured in Earth meridional circumferences.
@@ -422,6 +461,7 @@ pub const C_MERIDIONAL: EarthMeridionalCircumferences = EarthMeridionalCircumfer
 
 /// Earth equatorial circumference.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Ceq", dimension = Length, ratio = 40_075_017.0)]
 pub struct EarthEquatorialCircumference;
 /// A quantity measured in Earth equatorial circumferences.
@@ -435,6 +475,7 @@ pub const C_EQUATORIAL: EarthEquatorialCircumferences = EarthEquatorialCircumfer
 
 /// Bohr radius (`a0`). CODATA 2018 value in metres.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "a0", dimension = Length, ratio = 5.291_772_109_03e-11)]
 pub struct BohrRadius;
 /// A quantity measured in Bohr radii.
@@ -444,6 +485,7 @@ pub const A0: BohrRadii = BohrRadii::new(1.0);
 
 /// Classical electron radius (`re`). CODATA 2018 value in metres.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "re", dimension = Length, ratio = 2.817_940_326_2e-15)]
 pub struct ClassicalElectronRadius;
 /// A quantity measured in classical electron radii.
@@ -453,6 +495,7 @@ pub const RE: ClassicalElectronRadii = ClassicalElectronRadii::new(1.0);
 
 /// Planck length (`lp`). CODATA 2018 value in metres.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "lp", dimension = Length, ratio = 1.616_255e-35)]
 pub struct PlanckLength;
 /// A quantity measured in Planck lengths.
@@ -462,6 +505,7 @@ pub const LP: PlanckLengths = PlanckLengths::new(1.0);
 
 /// Reduced Compton wavelength of the electron (`lambda_bar_e`). CODATA 2018 value in metres.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "lambda_bar_e", dimension = Length, ratio = 3.861_592_679_6e-13)]
 pub struct ElectronReducedComptonWavelength;
 /// A quantity measured in reduced Compton wavelengths of the electron.

@@ -15,9 +15,11 @@ documentation = "https://docs.rs/qtty-core"
 default = ["std"]
 std = []
 serde = ["dep:serde"]
+python = ["dep:pyo3"]
 
 [dependencies]
 serde = { version = "1.0", default-features = false, features = ["derive"], optional = true }
+pyo3 = { version = "0.27.2", optional = true }
 libm = "0.2"
 qtty-derive = "0.1.0"
 

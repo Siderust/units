@@ -62,6 +62,7 @@
 //!
 //! - `std` (default): enables `std` support.
 //! - `serde`: enables `serde` support for `Quantity<U>`; serialization is the raw `f64` value only.
+//! - `python`: enables PyO3 bindings for Python interop via `#[pyclass]` and `#[pymethods]`.
 //!
 //! # Panics and errors
 //!

@@ -52,6 +52,8 @@
 use crate::{Dimension, Quantity, Unit};
 use core::f64::consts::TAU;
 use qtty_derive::Unit;
+#[cfg(feature = "python")]
+use pyo3::pyclass;
 
 #[inline]
 fn rem_euclid(x: f64, modulus: f64) -> f64 {
@@ -259,6 +261,7 @@ impl<U: AngularUnit + Copy> Quantity<U> {
 
 /// Degree.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Deg", dimension = Angular, ratio = 1.0)]
 pub struct Degree;
 /// Type alias shorthand for [`Degree`].
@@ -270,6 +273,7 @@ pub const DEG: Degrees = Degrees::new(1.0);
 
 /// Radian.
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Rad", dimension = Angular, ratio = 180.0 / core::f64::consts::PI)]
 pub struct Radian;
 /// Type alias shorthand for [`Radian`].
@@ -281,6 +285,7 @@ pub const RAD: Radians = Radians::new(1.0);
 
 /// Milliradian (`1/1000` radian).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "mrad", dimension = Angular, ratio = (180.0 / core::f64::consts::PI) / 1_000.0)]
 pub struct Milliradian;
 /// Type alias shorthand for [`Milliradian`].
@@ -292,6 +297,7 @@ pub const MRAD: Milliradians = Milliradians::new(1.0);
 
 /// Arcminute (`1/60` degree).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Arcm", dimension = Angular, ratio = 1.0 / 60.0)]
 pub struct Arcminute;
 /// Alias for [`Arcminute`] (minute of angle, MOA).
@@ -305,6 +311,7 @@ pub const ARCM: Arcminutes = Arcminutes::new(1.0);
 
 /// Arcsecond (`1/3600` degree).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Arcs", dimension = Angular, ratio = 1.0 / 3600.0)]
 pub struct Arcsecond;
 /// Type alias shorthand for [`Arcsecond`].
@@ -316,6 +323,7 @@ pub const ARCS: Arcseconds = Arcseconds::new(1.0);
 
 /// Milliarcsecond (`1/3_600_000` degree).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Mas", dimension = Angular, ratio = 1.0 / 3_600_000.0)]
 pub struct MilliArcsecond;
 /// Type alias shorthand for [`MilliArcsecond`].
@@ -327,6 +335,7 @@ pub const MAS: MilliArcseconds = MilliArcseconds::new(1.0);
 
 /// Microarcsecond (`1/3_600_000_000` degree).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "μas", dimension = Angular, ratio = 1.0 / 3_600_000_000.0)]
 pub struct MicroArcsecond;
 /// Type alias shorthand for [`MicroArcsecond`].
@@ -338,6 +347,7 @@ pub const UAS: MicroArcseconds = MicroArcseconds::new(1.0);
 
 /// Gradian (also called gon; `1/400` of a full turn = `0.9` degree).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Gon", dimension = Angular, ratio = 0.9)]
 pub struct Gradian;
 /// Type alias shorthand for [`Gradian`].
@@ -349,6 +359,7 @@ pub const GON: Gradians = Gradians::new(1.0);
 
 /// Turn (full revolution; `360` degrees).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Turn", dimension = Angular, ratio = 360.0)]
 pub struct Turn;
 /// Convenience alias for a turn quantity.
@@ -358,6 +369,7 @@ pub const TURN: Turns = Turns::new(1.0);
 
 /// Hour angle hour (`15` degrees).
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Unit)]
+#[cfg_attr(feature = "python", pyo3::pyclass)]
 #[unit(symbol = "Hms", dimension = Angular, ratio = 15.0)]
 pub struct HourAngle;
 /// Type alias shorthand for [`HourAngle`].
